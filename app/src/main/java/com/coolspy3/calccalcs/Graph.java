@@ -13,15 +13,12 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 public class Graph extends ImageBuffer {
 
     public static double defaultDX = 0.1D;
-    public double dx;
+    public double dx = defaultDX;
     private Expression expression;
     private double xMin, xMax, yMin, yMax;
-    private ArrayList<Line> lines;
-    private ArrayList<Shape> shapes;
-
-    public Graph() {
-        dx = defaultDX;
-    }
+    private ArrayList<Line> lines = new ArrayList<>();
+    private ArrayList<Shape> shapes = new ArrayList<>();
+    private AffineTransform transform = new AffineTransform();
 
     public void setDomain(double b1, double b2) {
         xMin = Math.min(b1, b2);
@@ -29,7 +26,7 @@ public class Graph extends ImageBuffer {
     }
 
     public void reset(String newExpression) {
-        reset(new ExpressionBuilder(newExpression).build());
+        reset(new ExpressionBuilder(newExpression).variable("x").build());
     }
 
     public void reset(Expression newExpression) {
@@ -53,10 +50,9 @@ public class Graph extends ImageBuffer {
     @Override
     public void render(Graphics2D g) {
         calculateRange();
-        AffineTransform transform = g.getTransform();
-        transformPlane(g);
+        transformPlane();
+        drawAxes(g);
         drawGraph(g);
-        g.setTransform(transform);
     }
 
     private void calculateRange() {
@@ -64,22 +60,31 @@ public class Graph extends ImageBuffer {
         yMax = Utils.maxOn(xMin, xMax, expression, dx);
         for(Shape shape : shapes) {
             yMin = Math.min(yMin, shape.getBounds2D().getMinY());
-            yMax = Math.min(yMax, shape.getBounds2D().getMaxY());
+            yMax = Math.max(yMax, shape.getBounds2D().getMaxY());
         }
     }
 
-    private void transformPlane(Graphics2D g) {
-        g.scale(getWidth() / (xMax - xMin), getHeight() / (yMax - yMin));
-        g.translate(xMin, xMax);
+    private void transformPlane() {
+        transform.setToIdentity();
+        transform.scale(getWidth() / (xMax - xMin), -getHeight() / (yMax - yMin));
+        transform.translate(-xMin, yMin);
+    }
+
+    private void drawAxes(Graphics2D g) {
+        g.setColor(new Color(0, 0, 0));
+        Utils.drawLine(xMin, 0, xMax, 0, g, transform);
+        Utils.drawLine(0, yMin, 0, yMax, g, transform);
     }
 
     private void drawGraph(Graphics2D g) {
         g.setColor(new Color(0, 0, 255));
         drawFunction(this::evaluateAt, g);
+        ArrayList<Shape> transformedShapes = new ArrayList<>(shapes);
+        transformedShapes.replaceAll(transform::createTransformedShape);
         g.setColor(new Color(100, 100, 255));
-        for(Shape shape: shapes) g.draw(shape);
-        g.setColor(new Color(200, 200, 255));
-        for(Shape shape: shapes) g.fill(shape);
+        for(Shape shape: transformedShapes) g.draw(shape);
+        g.setColor(new Color(200, 200, 255, 100));
+        for(Shape shape: transformedShapes) g.fill(shape);
         g.setColor(new Color(255, 0, 0));
         for(Line line: lines) drawFunction(line::evaluateAt, g);
     }
@@ -87,7 +92,7 @@ public class Graph extends ImageBuffer {
     private void drawFunction(DoubleUnaryOperator func, Graphics2D g) {
         double val = func.applyAsDouble(xMin);
         for(double x = xMin; x <= xMax; x += dx) {
-            Utils.drawLine(x, x + dx, val, val = func.applyAsDouble(x + dx), g);
+            Utils.drawLine(x, val, x + dx, val = func.applyAsDouble(x + dx), g, transform);
         }
     }
 
