@@ -5,8 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-
-import javax.sound.sampled.Line;
+import java.util.function.DoubleUnaryOperator;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -76,9 +75,19 @@ public class Graph extends ImageBuffer {
 
     private void drawGraph(Graphics2D g) {
         g.setColor(new Color(0, 0, 255));
-        double val = evaluateAt(xMin);
+        drawFunction(this::evaluateAt, g);
+        g.setColor(new Color(100, 100, 255));
+        for(Shape shape: shapes) g.draw(shape);
+        g.setColor(new Color(200, 200, 255));
+        for(Shape shape: shapes) g.fill(shape);
+        g.setColor(new Color(255, 0, 0));
+        for(Line line: lines) drawFunction(line::evaluateAt, g);
+    }
+
+    private void drawFunction(DoubleUnaryOperator func, Graphics2D g) {
+        double val = func.applyAsDouble(xMin);
         for(double x = xMin; x <= xMax; x += dx) {
-            Utils.drawLine(x, x + dx, val, val = evaluateAt(x + dx), g);
+            Utils.drawLine(x, x + dx, val, val = func.applyAsDouble(x + dx), g);
         }
     }
 
