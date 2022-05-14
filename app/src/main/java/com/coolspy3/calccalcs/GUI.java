@@ -5,9 +5,11 @@ import javax.swing.JTabbedPane;
 
 import com.coolspy3.calccalcs.calcs.RRCalculator;
 
-public class GUI extends JFrame {
+public class GUI extends JFrame
+{
 
-    public GUI() {
+    public GUI()
+    {
         super("Calc Calcs");
 
         setSize(1000, 1000);

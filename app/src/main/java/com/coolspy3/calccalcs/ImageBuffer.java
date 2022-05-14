@@ -7,11 +7,13 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
-public abstract class ImageBuffer extends JComponent {
+public abstract class ImageBuffer extends JComponent
+{
 
     private Image image;
 
-    public ImageBuffer() {
+    public ImageBuffer()
+    {
         setSize(1, 1);
         image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
@@ -22,14 +24,18 @@ public abstract class ImageBuffer extends JComponent {
 
     public abstract void render(Graphics2D g);
 
-    public boolean updateImage() {
+    public boolean updateImage()
+    {
         boolean errorOccurred = false;
         Image nImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        try {
+        try
+        {
             Graphics2D iGraphics = (Graphics2D) nImage.getGraphics();
             render(iGraphics);
             iGraphics.dispose();
-        } catch(Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace(System.err);
             Graphics g = image.getGraphics();
             g.setColor(getBackground());
@@ -42,7 +48,8 @@ public abstract class ImageBuffer extends JComponent {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         g.drawImage(image, 0, 0, null);
     }
 
