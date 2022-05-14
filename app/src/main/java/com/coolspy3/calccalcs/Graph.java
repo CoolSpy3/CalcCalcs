@@ -17,6 +17,7 @@ public class Graph extends ImageBuffer {
     private Expression expression;
     private double xMin, xMax, yMin, yMax;
     private ArrayList<Line> lines = new ArrayList<>();
+    private ArrayList<LineSegment> lineSegments = new ArrayList<>();
     private ArrayList<Shape> shapes = new ArrayList<>();
     private AffineTransform transform = new AffineTransform();
 
@@ -32,11 +33,16 @@ public class Graph extends ImageBuffer {
     public void reset(Expression newExpression) {
         expression = newExpression;
         lines.clear();
+        lineSegments.clear();
         shapes.clear();
     }
 
     public void addLine(Line line) {
         lines.add(line);
+    }
+
+    public void addLineSegment(LineSegment segment) {
+        lineSegments.add(segment);
     }
 
     public void addShape(Shape shape) {
@@ -68,6 +74,8 @@ public class Graph extends ImageBuffer {
         transform.setToIdentity();
         transform.scale(getWidth() / (xMax - xMin), -getHeight() / (yMax - yMin));
         transform.translate(-xMin, yMin);
+        System.out.println(yMin);
+        System.out.println(-getHeight() / (yMax - yMin));
     }
 
     private void drawAxes(Graphics2D g) {
@@ -87,9 +95,14 @@ public class Graph extends ImageBuffer {
         for(Shape shape: transformedShapes) g.fill(shape);
         g.setColor(new Color(255, 0, 0));
         for(Line line: lines) drawFunction(line::evaluateAt, g);
+        for(LineSegment segment: lineSegments) drawFunction(segment::evaluateAt, g, segment.xMin, segment.xMax);
     }
 
     private void drawFunction(DoubleUnaryOperator func, Graphics2D g) {
+        drawFunction(func, g, xMin, xMax);
+    }
+
+    private void drawFunction(DoubleUnaryOperator func, Graphics2D g, double xMin, double xMax) {
         double val = func.applyAsDouble(xMin);
         for(double x = xMin; x <= xMax; x += dx) {
             Utils.drawLine(x, val, x + dx, val = func.applyAsDouble(x + dx), g, transform);

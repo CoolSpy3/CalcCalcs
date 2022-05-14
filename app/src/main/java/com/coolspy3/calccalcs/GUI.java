@@ -1,24 +1,23 @@
 package com.coolspy3.calccalcs;
 
-import java.awt.geom.Rectangle2D;
-
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+
+import com.coolspy3.calccalcs.calcs.RRCalculator;
 
 public class GUI extends JFrame {
 
     public GUI() {
+        super("Calc Calcs");
+
         setSize(1000, 1000);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Graph graph = new Graph();
-        graph.setSize(300, 300);
-        graph.setDomain(0, Math.PI * 2);
-        graph.reset("sin(x)");
-        graph.addLine(new Line(1, 0));
-        graph.addShape(new Rectangle2D.Double(0, 0, 1, 1));
-        add(graph);
+
+        JTabbedPane calcs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+        calcs.addTab("RR", new RRCalculator());
+
+        add(calcs);
         setVisible(true);
-        graph.updateImage();
-        graph.repaint();
     }
 
 }

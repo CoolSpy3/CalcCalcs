@@ -23,6 +23,7 @@ public abstract class ImageBuffer extends JComponent {
     public abstract void render(Graphics2D g);
 
     public boolean updateImage() {
+        boolean errorOccurred = false;
         Image nImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         try {
             Graphics2D iGraphics = (Graphics2D) nImage.getGraphics();
@@ -30,10 +31,14 @@ public abstract class ImageBuffer extends JComponent {
             iGraphics.dispose();
         } catch(Exception e) {
             e.printStackTrace(System.err);
-            return true;
+            Graphics g = image.getGraphics();
+            g.setColor(getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.dispose();
+            errorOccurred = true;
         }
         image = nImage;
-        return false;
+        return errorOccurred;
     }
 
     @Override
