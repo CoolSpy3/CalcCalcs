@@ -3,6 +3,7 @@ package com.coolspy3.calccalcs;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
@@ -31,6 +32,8 @@ public abstract class ImageBuffer extends JComponent
         try
         {
             Graphics2D iGraphics = (Graphics2D) nImage.getGraphics();
+            iGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
             render(iGraphics);
             iGraphics.dispose();
         }

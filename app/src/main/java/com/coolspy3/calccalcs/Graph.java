@@ -85,9 +85,7 @@ public class Graph extends ImageBuffer
     {
         transform.setToIdentity();
         transform.scale(getWidth() / (xMax - xMin), -getHeight() / (yMax - yMin));
-        transform.translate(-xMin, yMin);
-        System.out.println(yMin);
-        System.out.println(-getHeight() / (yMax - yMin));
+        transform.translate(-xMin, -yMax);
     }
 
     private void drawAxes(Graphics2D g)
@@ -128,6 +126,11 @@ public class Graph extends ImageBuffer
         {
             Utils.drawLine(x, val, x + dx, val = func.applyAsDouble(x + dx), g, transform);
         }
+    }
+
+    public Expression getExpression()
+    {
+        return expression;
     }
 
 }
