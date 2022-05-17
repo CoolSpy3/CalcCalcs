@@ -35,8 +35,9 @@ public class EulerMethodCalculator extends Calculator<Graph>
         for (int i = 0; i < n; i++)
         {
             double dydx = diffEq.setVariable("x", x).setVariable("y", y).evaluate();
-            double ny = y + dx * dydx;
-            image.addLineSegment(new LineSegment(dydx, x, y, x, x += dx));
+            double nx = x + dx, ny = y + dx * dydx;
+            image.addLineSegment(new LineSegment(dydx, x, y, x, nx));
+            x = nx;
             y = ny;
         }
         return y;

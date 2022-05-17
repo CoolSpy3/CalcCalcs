@@ -79,6 +79,13 @@ public class Graph extends ImageBuffer
             yMin = Math.min(yMin, shape.getBounds2D().getMinY());
             yMax = Math.max(yMax, shape.getBounds2D().getMaxY());
         }
+        for (LineSegment segment : lineSegments)
+        {
+            yMin = Math.min(yMin, segment.evaluateAt(segment.xMin));
+            yMin = Math.min(yMin, segment.evaluateAt(segment.xMax));
+            yMax = Math.max(yMax, segment.evaluateAt(segment.xMin));
+            yMax = Math.max(yMax, segment.evaluateAt(segment.xMax));
+        }
     }
 
     private void transformPlane()
