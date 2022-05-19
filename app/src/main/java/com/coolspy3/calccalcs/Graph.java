@@ -129,7 +129,7 @@ public class Graph extends ImageBuffer
     private void drawFunction(DoubleUnaryOperator func, Graphics2D g, double xMin, double xMax)
     {
         double val = func.applyAsDouble(xMin);
-        for (double x = xMin; x <= xMax; x += dx)
+        for (double x = xMin; x <= xMax - dx; x += dx)
         {
             Utils.drawLine(x, val, x + dx, val = func.applyAsDouble(x + dx), g, transform);
         }
