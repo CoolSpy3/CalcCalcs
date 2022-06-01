@@ -1,5 +1,9 @@
 package com.coolspy3.calccalcs;
 
+import java.util.function.DoubleUnaryOperator;
+
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;
 
 public class LambdaFunction extends Function
@@ -17,6 +21,12 @@ public class LambdaFunction extends Function
     {
         super(name, numArguments);
         this.func = func;
+    }
+
+    public static Expression expressionFromLambda(DoubleUnaryOperator func)
+    {
+        return new ExpressionBuilder("func(x)").variable("x")
+                .function(new LambdaFunction("func", args -> func.applyAsDouble(args[0]))).build();
     }
 
     @Override

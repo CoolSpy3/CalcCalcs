@@ -11,6 +11,13 @@ import javax.swing.JComponent;
 public abstract class ImageBuffer extends JComponent
 {
 
+    public static final ImageBuffer NO_IMAGE = new ImageBuffer()
+    {
+        @Override
+        public void render(Graphics2D g)
+        {}
+    };
+
     private Image image;
 
     public ImageBuffer()

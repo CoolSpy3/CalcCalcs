@@ -7,6 +7,7 @@ import com.coolspy3.calccalcs.calcs.ArcLengthCalculator;
 import com.coolspy3.calccalcs.calcs.EulerMethodCalculator;
 import com.coolspy3.calccalcs.calcs.RRCalculator;
 import com.coolspy3.calccalcs.calcs.TrapezoidRuleCalculator;
+import com.coolspy3.calccalcs.calcs.WaterBottleCalculator;
 
 public class GUI extends JFrame
 {
@@ -23,6 +24,7 @@ public class GUI extends JFrame
         calcs.addTab("Trapezoid Rule", new TrapezoidRuleCalculator());
         calcs.addTab("Euler's Method", new EulerMethodCalculator());
         calcs.addTab("Arc Length", new ArcLengthCalculator());
+        calcs.addTab("Water Bottle", new WaterBottleCalculator());
 
         add(calcs);
         setVisible(true);

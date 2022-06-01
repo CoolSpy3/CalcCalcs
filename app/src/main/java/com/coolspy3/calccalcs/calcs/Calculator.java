@@ -13,20 +13,24 @@ import javax.swing.JTextField;
 
 import com.coolspy3.calccalcs.ImageBuffer;
 
-public abstract class Calculator<T extends ImageBuffer> extends JPanel implements ActionListener {
+public abstract class Calculator<T extends ImageBuffer> extends JPanel implements ActionListener
+{
 
     protected final T image;
-    private final JPanel controlPanel;
-    private final JTextField[] controls;
-    private final JTextField resultField;
-    private final JButton calculateButton;
+    protected final JPanel controlPanel;
+    protected final JTextField[] controls;
+    protected final JTextField resultField;
+    protected final JButton calculateButton;
+    private boolean customResults = false;
 
-    public Calculator(T image, String... controls) {
+    public Calculator(T image, String... controls)
+    {
         super(new BorderLayout());
         this.image = image;
         this.controls = new JTextField[controls.length];
         this.controlPanel = new JPanel(new GridLayout(controls.length + 1, 2));
-        for(int i = 0; i < controls.length; i++) {
+        for (int i = 0; i < controls.length; i++)
+        {
             controlPanel.add(new JLabel(controls[i]));
             controlPanel.add(this.controls[i] = new JTextField(80));
         }
@@ -41,35 +45,49 @@ public abstract class Calculator<T extends ImageBuffer> extends JPanel implement
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == calculateButton) {
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == calculateButton)
+        {
             double result;
-            try {
+            try
+            {
                 result = calculate(getArgs());
-            } catch(Exception exc) {
+            }
+            catch (Exception exc)
+            {
                 exc.printStackTrace(System.err);
                 onInvalidArgs();
                 return;
             }
-            if(image.updateImage()) {
+            if (image.updateImage())
+            {
                 onInvalidArgs();
                 return;
             }
             image.repaint();
-            resultField.setText(Double.toString(result));
+            if (!customResults) resultField.setText(Double.toString(result));
         }
     }
 
-    private String[] getArgs() {
+    protected void customResults(boolean customResults)
+    {
+        this.customResults = customResults;
+    }
+
+    private String[] getArgs()
+    {
         String[] args = new String[controls.length];
-        for(int i = 0; i < controls.length; i++)
-                args[i] = controls[i].getText();
+        for (int i = 0; i < controls.length; i++)
+            args[i] = controls[i].getText();
         return args;
     }
 
-    private void onInvalidArgs() {
+    private void onInvalidArgs()
+    {
         resultField.setText("Error!");
-        JOptionPane.showMessageDialog(null, "Invalid Arguments!", "Error!", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Invalid Arguments!", "Error!",
+                JOptionPane.ERROR_MESSAGE);
     }
 
     protected abstract double calculate(String[] args);
