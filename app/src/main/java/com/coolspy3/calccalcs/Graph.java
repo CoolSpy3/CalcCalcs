@@ -79,6 +79,13 @@ public class Graph extends ImageBuffer
             yMin = Math.min(yMin, shape.getBounds2D().getMinY());
             yMax = Math.max(yMax, shape.getBounds2D().getMaxY());
         }
+        for (LineSegment segment : lineSegments)
+        {
+            yMin = Math.min(yMin, segment.evaluateAt(segment.xMin));
+            yMin = Math.min(yMin, segment.evaluateAt(segment.xMax));
+            yMax = Math.max(yMax, segment.evaluateAt(segment.xMin));
+            yMax = Math.max(yMax, segment.evaluateAt(segment.xMax));
+        }
     }
 
     private void transformPlane()
@@ -122,7 +129,7 @@ public class Graph extends ImageBuffer
     private void drawFunction(DoubleUnaryOperator func, Graphics2D g, double xMin, double xMax)
     {
         double val = func.applyAsDouble(xMin);
-        for (double x = xMin; x <= xMax; x += dx)
+        for (double x = xMin; x <= xMax - dx; x += dx)
         {
             Utils.drawLine(x, val, x + dx, val = func.applyAsDouble(x + dx), g, transform);
         }

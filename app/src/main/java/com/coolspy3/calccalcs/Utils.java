@@ -51,7 +51,7 @@ public final class Utils
         int n = 1000;
         double dx = (x2 - x1) / n;
         double x = x1, y = y1;
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; x += dx, i++)
         {
             double dydx = diffEq.setVariable("x", x).setVariable("y", y).evaluate();
             y += dydx * dx;
